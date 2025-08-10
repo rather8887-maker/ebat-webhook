@@ -5,7 +5,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Sabit token
-const TOKEN = "CNSFUR2025TOKENABCDEF12345678aaaa";
+const TOKEN = "cf30940f619f592fc4c76202ebcc147622c43694aa15719d7cdda07dc2d50fa1";
 
 // Webhook endpoint
 app.all("/webhook", (req, res) => {

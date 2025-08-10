@@ -2,13 +2,12 @@ const express = require("express");
 const crypto = require("crypto");
 const app = express();
 
+const VERIFICATION_TOKEN = "52161ff4651cb71888801b47bae62f44d7f6d0aab17e70d00f64fc84368ca38f";
+const ENDPOINT_URL = "https://ebat-webhook.onrender.com/webhook";
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// eBay developer console'dan aldığın token
-const VERIFY_TOKEN = "52161ff4651cb71888801b47bae62f44d7f6d0aab17e70d00f64fc84368ca38f";
-
-// Webhook endpoint
 app.all("/webhook", (req, res) => {
   console.log("📩 Gelen istek:", {
     method: req.method,
@@ -16,23 +15,24 @@ app.all("/webhook", (req, res) => {
     body: req.body
   });
 
+  // eBay'in challenge_code'u
   const challengeCode =
     req.query.challenge_code ||
+    req.query.challengeCode ||
     req.body.challenge_code ||
+    req.body.challengeCode ||
     "";
 
-  if (!challengeCode) {
-    return res.status(400).send("challenge_code eksik");
-  }
-
-  // eBay'in istediği hash formatı: SHA256(challengeCode + verifyToken)
-  const hash = crypto
+  // SHA256 ile resmi formatta cevap
+  const challengeResponse = crypto
     .createHash("sha256")
-    .update(challengeCode + VERIFY_TOKEN)
+    .update(challengeCode)
+    .update(VERIFICATION_TOKEN)
+    .update(ENDPOINT_URL)
     .digest("hex");
 
   res.setHeader("Content-Type", "application/json; charset=utf-8");
-  res.status(200).json({ challengeResponse: hash });
+  res.status(200).json({ challengeResponse });
 });
 
 app.get("/", (_req, res) => res.send("Server çalışıyor"));

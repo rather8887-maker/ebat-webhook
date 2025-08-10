@@ -20,7 +20,7 @@ app.all("/webhook", (req, res) => {
     (q && "verificationToken" in q && "verificationToken") ||
     "challenge_code"; // yoksa defaults: challenge_code
 
-  const val = (b && b[key]) || (q && q[key]) || "PING";
+  const val = (b && b[key]) || (q && q[key]) || "4ba294997ee1c191211875dce92ace43ac252e2fdadf94f7640a374f1742a1f9";
 
   res.status(200).json({ [key]: val });
 });

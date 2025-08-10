@@ -20,6 +20,7 @@ app.all("/webhook", (req, res) => {
     q.verificationToken ||
     "CNSFUR2025TOKENABCDEF12345678aaaa";
 
+  // Sadece eBay’in beklediği şekilde dön
   res.status(200).json({ challenge });
 });
 

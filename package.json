@@ -1,7 +1,6 @@
 {
-  "name": "ebay-webhook",
+  "name": "ebat-webhook",
   "version": "1.0.0",
-  "description": "eBay webhook doğrulama serverı",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"

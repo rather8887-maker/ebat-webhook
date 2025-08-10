@@ -4,27 +4,26 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Sabit token
-const TOKEN = "cf30940f619f592fc4c76202ebcc147622c43694aa15719d7cdda07dc2d50fa1";
-
-// Webhook endpoint
 app.all("/webhook", (req, res) => {
-  console.log("📩 Gelen istek:", {
-    method: req.method,
-    query: req.query,
-    body: req.body
-  });
+  const q = req.query || {};
+  const b = req.body || {};
 
-  // eBay'in istediği key challengeCode
-  res.json({ challengeCode: TOKEN });
+  // Gelen key'i sırayla kontrol et ve HANGİ İSİMLE geldiyse AYNI İSİMLE geri yolla
+  const key =
+    (b && "challenge_code" in b && "challenge_code") ||
+    (q && "challenge_code" in q && "challenge_code") ||
+    (b && "challengeCode" in b && "challengeCode") ||
+    (q && "challengeCode" in q && "challengeCode") ||
+    (b && "challenge" in b && "challenge") ||
+    (q && "challenge" in q && "challenge") ||
+    (b && "verificationToken" in b && "verificationToken") ||
+    (q && "verificationToken" in q && "verificationToken") ||
+    "challenge_code"; // yoksa defaults: challenge_code
+
+  const val = (b && b[key]) || (q && q[key]) || "PING";
+
+  res.status(200).json({ [key]: val });
 });
 
-// Test root
-app.get("/", (req, res) => {
-  res.send("✅ Server çalışıyor");
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 OK on port ${PORT}`);
-});
+app.get("/", (_req, res) => res.send("✅ Server çalışıyor"));
+app.listen(process.env.PORT || 3000, () => console.log("🚀 OK on port " + (process.env.PORT || 3000)));

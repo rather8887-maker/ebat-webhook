@@ -15,8 +15,8 @@ app.all("/webhook", (req, res) => {
     body: req.body
   });
 
-  // JSON formatında challenge döndür
-  res.json({ challenge: TOKEN });
+  // eBay'in istediği key challengeCode
+  res.json({ challengeCode: TOKEN });
 });
 
 // Test root
@@ -24,7 +24,6 @@ app.get("/", (req, res) => {
   res.send("✅ Server çalışıyor");
 });
 
-// Render, Heroku vb. port desteği
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 OK on port ${PORT}`);
